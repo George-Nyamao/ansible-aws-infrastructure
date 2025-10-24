@@ -361,7 +361,6 @@ aws cloudwatch get-metric-statistics \
 3. **Right-sizing**: Use appropriate instance types
 4. **Auto Scaling**: Scale based on demand
 5. **S3 Lifecycle**: Move old data to
-# Complete the README.md (continuing from where it cut off)
 cat >> README.md << 'EOF'
  Glacier
 6. **Delete Unused Resources**: Regularly audit and remove
