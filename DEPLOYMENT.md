@@ -171,7 +171,7 @@ ansible-galaxy collection install community.aws
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/ansible-aws-infrastructure.git
+git clone git@github.com:George-Nyamao/ansible-aws-infrastructure.git
 cd ansible-aws-infrastructure
 ```
 
