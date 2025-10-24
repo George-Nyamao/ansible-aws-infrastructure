@@ -691,7 +691,7 @@ MIT License - see LICENSE file
 
 ## Support
 
-[![GitHub Issues](https://img.shields.io/github/issues/George-Nyamao/ansible-aws-infrastructure)](https://github.com/George-Nyamao/ansible-aws-infrastructure/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/George-Nyamao/ansible-aws-infrastructure?style=flat)](https://github.com/George-Nyamao/ansible-aws-infrastructure/issues)
 [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?style=flat## Supportlogo=github)](https://github.com/George-Nyamao/ansible-aws-infrastructure/discussions)
 
 
@@ -754,7 +754,7 @@ A: Yes, modify the VPC role to use existing VPC ID.
 
 ## Author
 
-**Your Name**
+**George Nyamao**
 - GitHub: [@George-Nyamao](https://github.com/George-Nyamao)
 - LinkedIn: [George Nyamao](https://www.linkedin.com/in/george-nyamao-842137218/)
 - Email: gmnyamao@hotmail.com
