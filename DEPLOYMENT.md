@@ -747,7 +747,7 @@ ansible-playbook destroy.yml
 ```bash
 # Check current month costs
 aws ce get-cost-and-usage \
-  --time-period Start=2024-01-01,End=2024-01-31 \
+  --time-period Start=$(date +%Y-%m-01),End=$(date -d "$(date +%Y-%m-01) +1 month -1 day" +%Y-%m-%d) \
   --granularity MONTHLY \
   --metrics BlendedCost
 ```
