@@ -692,12 +692,18 @@ MIT License - see LICENSE file
 ## Support
 
 [![GitHub Issues](https://img.shields.io/github/issues/George-Nyamao/ansible-aws-infrastructure?style=flat)](https://github.com/George-Nyamao/ansible-aws-infrastructure/issues)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?style=flat&logo=github)](https://github.com/George-Nyamao/ansible-aws-infrastructure/discussions)
+
+- **Issues**: [GitHub Issues](https://github.com/George-Nyamao/ansible-aws-infrastructure/issues)
+- **Documentation**: See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed guide
+
 [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?style=flat## Supportlogo=github)](https://github.com/George-Nyamao/ansible-aws-infrastructure/discussions)
 
+[![GitHub Issues](https://img.shields.io/github/issues/George-Nyamao/ansible-aws-infrastructure?style=flat)](https://github.com/George-Nyamao/ansible-aws-infrastructure/issues)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?style=flat&logo=github)](https://github.com/George-Nyamao/ansible-aws-infrastructure/discussions)
 
-- **Issues**: [GitHub Issues](git@github.com:George-Nyamao/ansible-aws-infrastructure/issues)
-- **AWS Documentation**: [aws.amazon.com/documentation](https://aws.amazon.com/documentation/)
-- **Ansible AWS Docs**: [docs.ansible.com/ansible/latest/collections/amazon/aws](https://docs.ansible.com/ansible/latest/collections/amazon/aws)
+- **Issues**: [GitHub Issues](https://github.com/George-Nyamao/ansible-aws-infrastructure/issues)
+- **Documentation**: See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed guide
 
 ## Changelog
 
