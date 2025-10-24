@@ -4,6 +4,12 @@ Complete AWS infrastructure automation using Ansible - VPC, EC2, RDS, S3, ELB, a
 
 ## Features
 
+## 🔗 Connect With Me
+
+[![GitHub](https://img.shields.io/badge/GitHub-George--Nyamao-181717?style=for-the-badge&logo=github)](https://github.com/George-Nyamao)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-George_Nyamao-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/george-nyamao-842137218/)
+[![Email](https://img.shields.io/badge/Email-gmnyamao@hotmail.com-D14836?style=for-the-badge&logo=gmail)](mailto:gmnyamao@hotmail.com)
+
 - ✅ VPC with public and private subnets
 - ✅ Internet Gateway and NAT Gateway
 - ✅ EC2 instances with Auto Scaling
@@ -80,7 +86,7 @@ Complete AWS infrastructure automation using Ansible - VPC, EC2, RDS, S3, ELB, a
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/ansible-aws-infrastructure.git
+git clone git@github.com:George-Nyamao/ansible-aws-infrastructure.git
 cd ansible-aws-infrastructure
 ```
 
@@ -321,8 +327,8 @@ aws cloudwatch get-metric-statistics \
   --namespace AWS/EC2 \
   --metric-name CPUUtilization \
   --dimensions Name=InstanceId,Value=<INSTANCE_ID> \
-  --start-time 2024-01-01T00:00:00Z \
-  --end-time 2024-01-02T00:00:00Z \
+  --start-time $(date -u -d "1 hour ago" +%Y-%m-%dT%H:%M:%SZ) \
+  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
   --period 3600 \
   --statistics Average
 ```
@@ -335,8 +341,8 @@ aws cloudwatch get-metric-statistics \
   --namespace AWS/RDS \
   --metric-name DatabaseConnections \
   --dimensions Name=DBInstanceIdentifier,Value=<DB_INSTANCE_ID> \
-  --start-time 2024-01-01T00:00:00Z \
-  --end-time 2024-01-02T00:00:00Z \
+  --start-time $(date -u -d "1 hour ago" +%Y-%m-%dT%H:%M:%SZ) \
+  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
   --period 3600 \
   --statistics Average
 ```
@@ -685,13 +691,17 @@ MIT License - see LICENSE file
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/ansible-aws-infrastructure/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/George-Nyamao/ansible-aws-infrastructure)](https://github.com/George-Nyamao/ansible-aws-infrastructure/issues)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?style=flat## Supportlogo=github)](https://github.com/George-Nyamao/ansible-aws-infrastructure/discussions)
+
+
+- **Issues**: [GitHub Issues](git@github.com:George-Nyamao/ansible-aws-infrastructure/issues)
 - **AWS Documentation**: [aws.amazon.com/documentation](https://aws.amazon.com/documentation/)
 - **Ansible AWS Docs**: [docs.ansible.com/ansible/latest/collections/amazon/aws](https://docs.ansible.com/ansible/latest/collections/amazon/aws)
 
 ## Changelog
 
-### v1.0.0 (2024-01-XX)
+### v1.0.0 (2025-10-23)
 - Initial release
 - VPC with public/private subnets
 - EC2 instances with ALB
@@ -745,16 +755,16 @@ A: Yes, modify the VPC role to use existing VPC ID.
 ## Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+- GitHub: [@George-Nyamao](https://github.com/George-Nyamao)
+- LinkedIn: [George Nyamao](https://www.linkedin.com/in/george-nyamao-842137218/)
+- Email: gmnyamao@hotmail.com
 
 ## Related Projects
 
-- [Ansible LAMP Stack](https://github.com/yourusername/ansible-lamp-stack)
-- [Ansible Docker Automation](https://github.com/yourusername/ansible-docker-automation)
-- [Ansible Jenkins CI/CD](https://github.com/yourusername/ansible-jenkins-cicd)
-- [Ansible Kubernetes](https://github.com/yourusername/ansible-kubernetes)
+- [Ansible LAMP Stack](git@github.com:George-Nyamao/ansible-lamp-stack.git)
+- [Ansible Docker Automation](git@github.com:George-Nyamao/ansible-docker-automation.git)
+- [Ansible Jenkins CI/CD](git@github.com:George-Nyamao/ansible-jenkins-cicd.git)
+- [Ansible Kubernetes](git@github.com:George-Nyamao/ansible-kubernetes.git)
 
 ## Acknowledgments
 
