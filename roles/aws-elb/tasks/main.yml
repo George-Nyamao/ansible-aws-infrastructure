@@ -1,0 +1,65 @@
+---
+- name: Create Application Load Balancer
+  amazon.aws.elb_application_lb:
+    name: "{{ elb_name }}"
+    region: "{{ aws_region }}"
+    scheme: "{{ elb_scheme }}"
+    security_groups:
+      - "{{ web_sg_id }}"
+    subnets:
+      - "{{ public_subnets.results[0].subnet.id }}"
+      - "{{ public_subnets.results[1].subnet.id }}"
+    tags: "{{ common_tags }}"
+    state: present
+  register: alb
+  tags: aws, elb
+
+- name: Create target group
+  amazon.aws.elb_target_group:
+    name: "{{ project_name }}-tg"
+    protocol: http
+    port: 80
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    health_check_protocol: http
+    health_check_path: "{{ elb_health_check_path }}"
+    health_check_interval: 30
+    healthy_threshold_count: 2
+    unhealthy_threshold_count: 2
+    tags: "{{ common_tags }}"
+    state: present
+  register: target_group
+  tags: aws, elb
+
+- name: Register EC2 instances with target group
+  amazon.aws.elb_target:
+    target_group_name: "{{ project_name }}-tg"
+    target_id: "{{ item.instances[0].instance_id }}"
+    region: "{{ aws_region }}"
+    state: present
+  loop: "{{ ec2_instances.results }}"
+  tags: aws, elb
+
+- name: Create ALB listener
+  amazon.aws.elb_application_lb_listener:
+    load_balancer_arn: "{{ alb.load_balancer_arn }}"
+    protocol: http
+    port: 80
+    region: "{{ aws_region }}"
+    default_actions:
+      - type: forward
+        target_group_arn: "{{ target_group.target_group_arn }}"
+    state: present
+  tags: aws, elb
+
+- name: Save ELB information
+  copy:
+    content: |
+      Application Load Balancer:
+      - Name: {{ elb_name }}
+      - DNS Name: {{ alb.dns_name }}
+      - ARN: {{ alb.load_balancer_arn }}
+      - Target Group: {{ target_group.target_group_name }}
+    dest: ./elb_info.txt
+  delegate_to: localhost
+  tags: aws, elb

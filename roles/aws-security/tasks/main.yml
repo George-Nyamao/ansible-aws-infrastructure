@@ -1,0 +1,88 @@
+---
+- name: Create web server security group
+  amazon.aws.ec2_group:
+    name: "{{ project_name }}-web-sg"
+    description: "Security group for web servers"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    tags: "{{ common_tags }}"
+    rules:
+      - proto: tcp
+        ports:
+          - 80
+          - 443
+        cidr_ip: 0.0.0.0/0
+        rule_desc: "Allow HTTP/HTTPS from anywhere"
+      - proto: tcp
+        ports:
+          - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: "Allow SSH from anywhere"
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+    state: present
+  register: web_sg
+  tags: aws, security
+
+- name: Create application security group
+  amazon.aws.ec2_group:
+    name: "{{ project_name }}-app-sg"
+    description: "Security group for application servers"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    tags: "{{ common_tags }}"
+    rules:
+      - proto: tcp
+        ports:
+          - 8080
+        group_id: "{{ web_sg.group_id }}"
+        rule_desc: "Allow traffic from web servers"
+      - proto: tcp
+        ports:
+          - 22
+        cidr_ip: "{{ vpc_cidr_block }}"
+        rule_desc: "Allow SSH from VPC"
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+    state: present
+  register: app_sg
+  tags: aws, security
+
+- name: Create database security group
+  amazon.aws.ec2_group:
+    name: "{{ project_name }}-db-sg"
+    description: "Security group for RDS database"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    tags: "{{ common_tags }}"
+    rules:
+      - proto: tcp
+        ports:
+          - 3306
+        group_id: "{{ app_sg.group_id }}"
+        rule_desc: "Allow MySQL from application servers"
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+    state: present
+  register: db_sg
+  tags: aws, security
+
+- name: Set security group facts
+  set_fact:
+    web_sg_id: "{{ web_sg.group_id }}"
+    app_sg_id: "{{ app_sg.group_id }}"
+    db_sg_id: "{{ db_sg.group_id }}"
+  tags: aws, security
+
+- name: Save security group information
+  copy:
+    content: |
+      Web Security Group: {{ web_sg_id }}
+      App Security Group: {{ app_sg_id }}
+      Database Security Group: {{ db_sg_id }}
+    dest: ./security_groups.txt
+  delegate_to: localhost
+  tags: aws, security

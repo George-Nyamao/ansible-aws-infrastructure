@@ -1,0 +1,50 @@
+---
+- name: Create RDS subnet group
+  amazon.aws.rds_subnet_group:
+    name: "{{ project_name }}-db-subnet-group"
+    description: "Subnet group for RDS instance"
+    region: "{{ aws_region }}"
+    subnets:
+      - "{{ private_subnets.results[0].subnet.id }}"
+      - "{{ private_subnets.results[1].subnet.id }}"
+    tags: "{{ common_tags }}"
+    state: present
+  tags: aws, rds
+
+- name: Create RDS instance
+  amazon.aws.rds_instance:
+    db_instance_identifier: "{{ project_name }}-{{ environment }}-db"
+    engine: "{{ rds_engine }}"
+    engine_version: "{{ rds_engine_version }}"
+    db_instance_class: "{{ rds_instance_class }}"
+    allocated_storage: "{{ rds_allocated_storage }}"
+    db_name: "{{ rds_db_name }}"
+    master_username: "{{ rds_master_username }}"
+    master_user_password: "{{ rds_master_password }}"
+    vpc_security_group_ids:
+      - "{{ db_sg_id }}"
+    db_subnet_group_name: "{{ project_name }}-db-subnet-group"
+    multi_az: "{{ rds_multi_az }}"
+    storage_encrypted: true
+    backup_retention_period: 7
+    preferred_backup_window: "03:00-04:00"
+    preferred_maintenance_window: "sun:04:00-sun:05:00"
+    tags: "{{ common_tags }}"
+    region: "{{ aws_region }}"
+    state: present
+    wait: yes
+  register: rds_instance
+  tags: aws, rds
+
+- name: Save RDS information
+  copy:
+    content: |
+      RDS Instance:
+      - Instance ID: {{ rds_instance.db_instance_identifier }}
+      - Endpoint: {{ rds_instance.endpoint.address }}
+      - Port: {{ rds_instance.endpoint.port }}
+      - Database Name: {{ rds_db_name }}
+      - Master Username: {{ rds_master_username }}
+    dest: ./rds_info.txt
+  delegate_to: localhost
+  tags: aws, rds

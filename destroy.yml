@@ -1,0 +1,163 @@
+---
+- name: "Destroy AWS Infrastructure"
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  
+  vars_prompt:
+    - name: confirm_destroy
+      prompt: "Are you sure you want to destroy ALL AWS resources? Type 'yes' to confirm"
+      private: no
+  
+  tasks:
+    - name: Verify confirmation
+      fail:
+        msg: "Destruction cancelled - confirmation not provided"
+      when: confirm_destroy != "yes"
+      tags: always
+
+    - name: Terminate EC2 instances
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ item.instances[0].instance_id }}"
+        region: "{{ aws_region }}"
+        state: absent
+        wait: yes
+      loop: "{{ ec2_instances.results }}"
+      when: ec2_instances is defined
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete Application Load Balancer
+      amazon.aws.elb_application_lb:
+        name: "{{ elb_name }}"
+        region: "{{ aws_region }}"
+        state: absent
+        wait: yes
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete target group
+      amazon.aws.elb_target_group:
+        name: "{{ project_name }}-tg"
+        region: "{{ aws_region }}"
+        state: absent
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete RDS instance
+      amazon.aws.rds_instance:
+        db_instance_identifier: "{{ project_name }}-{{ environment }}-db"
+        region: "{{ aws_region }}"
+        skip_final_snapshot: yes
+        state: absent
+        wait: yes
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete RDS subnet group
+      amazon.aws.rds_subnet_group:
+        name: "{{ project_name }}-db-subnet-group"
+        region: "{{ aws_region }}"
+        state: absent
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete S3 bucket contents
+      amazon.aws.s3_bucket:
+        name: "{{ s3_bucket_name }}"
+        region: "{{ aws_region }}"
+        state: absent
+        force: yes
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete NAT Gateway
+      amazon.aws.ec2_vpc_nat_gateway:
+        nat_gateway_id: "{{ nat_gateway.nat_gateway_id }}"
+        region: "{{ aws_region }}"
+        state: absent
+        wait: yes
+      when: nat_gateway is defined
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Release Elastic IP
+      amazon.aws.ec2_eip:
+        region: "{{ aws_region }}"
+        public_ip: "{{ nat_eip.public_ip }}"
+        state: absent
+      when: nat_eip is defined
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete security groups
+      amazon.aws.ec2_group:
+        name: "{{ item }}"
+        region: "{{ aws_region }}"
+        state: absent
+      loop:
+        - "{{ project_name }}-web-sg"
+        - "{{ project_name }}-app-sg"
+        - "{{ project_name }}-db-sg"
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete Internet Gateway
+      amazon.aws.ec2_vpc_igw:
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ aws_region }}"
+        state: absent
+      when: vpc_id is defined
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete subnets
+      amazon.aws.ec2_vpc_subnet:
+        vpc_id: "{{ vpc_id }}"
+        cidr: "{{ item }}"
+        region: "{{ aws_region }}"
+        state: absent
+      loop: "{{ public_subnet_cidrs + private_subnet_cidrs }}"
+      when: vpc_id is defined
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete VPC
+      amazon.aws.ec2_vpc_net:
+        name: "{{ vpc_name }}"
+        cidr_block: "{{ vpc_cidr_block }}"
+        region: "{{ aws_region }}"
+        state: absent
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Delete EC2 key pair
+      amazon.aws.ec2_key:
+        name: "{{ ec2_key_name }}"
+        region: "{{ aws_region }}"
+        state: absent
+      ignore_errors: yes
+      tags: destroy
+
+    - name: Clean up local files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "./{{ ec2_key_name }}.pem"
+        - "./vpc_info.txt"
+        - "./security_groups.txt"
+        - "./ec2_instances.txt"
+        - "./rds_info.txt"
+        - "./s3_info.txt"
+        - "./elb_info.txt"
+      delegate_to: localhost
+      tags: destroy
+
+    - name: Display completion message
+      debug:
+        msg:
+          - "=========================================="
+          - "✅ AWS Infrastructure Destroyed"
+          - "=========================================="
+      tags: always

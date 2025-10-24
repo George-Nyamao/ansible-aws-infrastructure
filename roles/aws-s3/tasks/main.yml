@@ -1,0 +1,52 @@
+---
+- name: Create S3 bucket
+  amazon.aws.s3_bucket:
+    name: "{{ s3_bucket_name }}"
+    region: "{{ aws_region }}"
+    versioning: "{{ s3_versioning }}"
+    encryption: "aws:kms"
+    tags: "{{ common_tags }}"
+    state: present
+  register: s3_bucket
+  tags: aws, s3
+
+- name: Enable S3 bucket public access block
+  amazon.aws.s3_bucket:
+    name: "{{ s3_bucket_name }}"
+    region: "{{ aws_region }}"
+    public_access:
+      block_public_acls: true
+      block_public_policy: true
+      ignore_public_acls: true
+      restrict_public_buckets: true
+    state: present
+  tags: aws, s3
+
+- name: Create S3 bucket lifecycle policy
+  amazon.aws.s3_lifecycle:
+    name: "{{ s3_bucket_name }}"
+    region: "{{ aws_region }}"
+    rules:
+      - id: "DeleteOldVersions"
+        status: enabled
+        prefix: ""
+        noncurrent_version_expiration_days: 90
+      - id: "TransitionToIA"
+        status: enabled
+        prefix: ""
+        transitions:
+          - days: 30
+            storage_class: STANDARD_IA
+    state: present
+  tags: aws, s3
+
+- name: Save S3 bucket information
+  copy:
+    content: |
+      S3 Bucket:
+      - Bucket Name: {{ s3_bucket_name }}
+      - Region: {{ aws_region }}
+      - Versioning: {{ s3_versioning }}
+    dest: ./s3_info.txt
+  delegate_to: localhost
+  tags: aws, s3

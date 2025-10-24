@@ -1,0 +1,58 @@
+---
+- name: Create EC2 key pair
+  amazon.aws.ec2_key:
+    name: "{{ ec2_key_name }}"
+    region: "{{ aws_region }}"
+    state: present
+  register: ec2_key
+  tags: aws, ec2
+
+- name: Save private key
+  copy:
+    content: "{{ ec2_key.key.private_key }}"
+    dest: "./{{ ec2_key_name }}.pem"
+    mode: '0600'
+  when: ec2_key.key.private_key is defined
+  delegate_to: localhost
+  tags: aws, ec2
+
+- name: Launch EC2 instances
+  amazon.aws.ec2_instance:
+    name: "{{ project_name }}-web-{{ item }}"
+    key_name: "{{ ec2_key_name }}"
+    instance_type: "{{ ec2_instance_type }}"
+    image_id: "{{ ec2_ami }}"
+    region: "{{ aws_region }}"
+    vpc_subnet_id: "{{ public_subnets.results[item|int % 2].subnet.id }}"
+    security_group: "{{ web_sg_id }}"
+    network:
+      assign_public_ip: true
+    tags: "{{ common_tags | combine({'Name': project_name + '-web-' + item|string}) }}"
+    state: running
+    wait: yes
+  loop: "{{ range(0, ec2_instance_count|int) | list }}"
+  register: ec2_instances
+  tags: aws, ec2
+
+- name: Wait for SSH to be available
+  wait_for:
+    host: "{{ item.instances[0].public_ip_address }}"
+    port: 22
+    delay: 10
+    timeout: 300
+  loop: "{{ ec2_instances.results }}"
+  delegate_to: localhost
+  tags: aws, ec2
+
+- name: Save EC2 instance information
+  copy:
+    content: |
+      EC2 Instances:
+      {% for result in ec2_instances.results %}
+      - Instance ID: {{ result.instances[0].instance_id }}
+        Public IP: {{ result.instances[0].public_ip_address }}
+        Private IP: {{ result.instances[0].private_ip_address }}
+      {% endfor %}
+    dest: ./ec2_instances.txt
+  delegate_to: localhost
+  tags: aws, ec2

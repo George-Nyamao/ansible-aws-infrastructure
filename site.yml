@@ -1,0 +1,68 @@
+---
+- name: "AWS Infrastructure Deployment"
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  
+  pre_tasks:
+    - name: Display deployment information
+      debug:
+        msg:
+          - "=========================================="
+          - "AWS Infrastructure Deployment Starting"
+          - "=========================================="
+          - "Project: {{ project_name }}"
+          - "Environment: {{ environment }}"
+          - "Region: {{ aws_region }}"
+          - "=========================================="
+      tags: always
+
+    - name: Verify AWS credentials
+      command: aws sts get-caller-identity
+      register: aws_identity
+      changed_when: false
+      tags: always
+
+    - name: Display AWS account information
+      debug:
+        msg: "AWS Account: {{ (aws_identity.stdout | from_json).Account }}"
+      tags: always
+
+  roles:
+    - role: aws-vpc
+      tags: vpc
+
+    - role: aws-security
+      tags: security
+
+    - role: aws-ec2
+      tags: ec2
+
+    - role: aws-rds
+      tags: rds
+
+    - role: aws-s3
+      tags: s3
+
+    - role: aws-elb
+      tags: elb
+
+  post_tasks:
+    - name: Display deployment summary
+      debug:
+        msg:
+          - "=========================================="
+          - "✅ AWS Infrastructure Deployed Successfully!"
+          - "=========================================="
+          - "VPC ID: {{ vpc_id }}"
+          - "Load Balancer DNS: {{ alb.dns_name }}"
+          - ""
+          - "Check the following files for details:"
+          - "  - vpc_info.txt"
+          - "  - security_groups.txt"
+          - "  - ec2_instances.txt"
+          - "  - rds_info.txt"
+          - "  - s3_info.txt"
+          - "  - elb_info.txt"
+          - "=========================================="
+      tags: always

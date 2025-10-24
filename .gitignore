@@ -1,0 +1,68 @@
+# AWS
+*.pem
+*_info.txt
+.aws/
+
+# Ansible
+*.retry
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform (if used alongside)
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Secrets
+secrets.yml
+cat > .gitignore << 'EOF'
+# AWS
+*.pem
+*_info.txt
+.aws/
+credentials
+
+# Ansible
+*.retry
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform (if used alongside)
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Secrets
+secrets.yml
+vault_password.txt
+*password*
+
+# Temporary
+*.tmp
+.ansible/

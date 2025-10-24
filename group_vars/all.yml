@@ -1,0 +1,57 @@
+---
+# AWS Configuration
+aws_region: "us-east-1"
+aws_availability_zones:
+  - "{{ aws_region }}a"
+  - "{{ aws_region }}b"
+
+# Project Configuration
+project_name: "myproject"
+environment: "production"
+
+# VPC Configuration
+vpc_cidr_block: "10.0.0.0/16"
+vpc_name: "{{ project_name }}-{{ environment }}-vpc"
+
+# Subnet Configuration
+public_subnet_cidrs:
+  - "10.0.1.0/24"
+  - "10.0.2.0/24"
+private_subnet_cidrs:
+  - "10.0.10.0/24"
+  - "10.0.20.0/24"
+
+# EC2 Configuration
+ec2_instance_type: "t3.micro"
+ec2_ami: "ami-0c55b159cbfafe1f0"  # Amazon Linux 2
+ec2_key_name: "{{ project_name }}-key"
+ec2_instance_count: 2
+
+# RDS Configuration
+rds_engine: "mysql"
+rds_engine_version: "8.0"
+rds_instance_class: "db.t3.micro"
+rds_allocated_storage: 20
+rds_db_name: "{{ project_name }}db"
+rds_master_username: "admin"
+rds_multi_az: false
+
+# S3 Configuration
+s3_bucket_name: "{{ project_name }}-{{ environment }}-bucket"
+s3_versioning: true
+
+# ELB Configuration
+elb_name: "{{ project_name }}-{{ environment }}-elb"
+elb_scheme: "internet-facing"
+elb_health_check_path: "/health"
+
+# Security
+enable_vpc_flow_logs: true
+enable_cloudtrail: true
+enable_config: true
+
+# Tags
+common_tags:
+  Project: "{{ project_name }}"
+  Environment: "{{ environment }}"
+  ManagedBy: "Ansible"
