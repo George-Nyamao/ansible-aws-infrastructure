@@ -171,7 +171,7 @@ ansible-galaxy collection install community.aws
 ### Step 1: Clone Repository
 
 ```bash
-git clone git@github.com:George-Nyamao/ansible-aws-infrastructure.git
+git clone https://github.com/yourusername/ansible-aws-infrastructure.git
 cd ansible-aws-infrastructure
 ```
 
@@ -319,10 +319,7 @@ ansible-playbook site.yml
 
 ## Verification
 
-### Check
-# Complete DEPLOYMENT.md (continuing from where it cut off)
-cat >> DEPLOYMENT.md << 'EOF'
- Infrastructure Status
+### Check Infrastructure Status
 
 ```bash
 make status
@@ -852,7 +849,7 @@ aws cloudwatch put-metric-alarm \
 ## Support
 
 For issues or questions:
-- GitHub Issues: https://github.com/yourusername/ansible-aws-infrastructure/issues
+- GitHub Issues: https://github.com/George-Nyamao/ansible-aws-infrastructure/issues
 - AWS Support: https://console.aws.amazon.com/support/
 - Ansible Community: https://www.ansible.com/community
 
