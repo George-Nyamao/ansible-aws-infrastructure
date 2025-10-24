@@ -4,12 +4,6 @@ Complete AWS infrastructure automation using Ansible - VPC, EC2, RDS, S3, ELB, a
 
 ## Features
 
-## 🔗 Connect With Me
-
-[![GitHub](https://img.shields.io/badge/GitHub-George--Nyamao-181717?style=for-the-badge&logo=github)](https://github.com/George-Nyamao)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-George_Nyamao-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/george-nyamao-842137218/)
-[![Email](https://img.shields.io/badge/Email-gmnyamao@hotmail.com-D14836?style=for-the-badge&logo=gmail)](mailto:gmnyamao@hotmail.com)
-
 - ✅ VPC with public and private subnets
 - ✅ Internet Gateway and NAT Gateway
 - ✅ EC2 instances with Auto Scaling
@@ -20,6 +14,12 @@ Complete AWS infrastructure automation using Ansible - VPC, EC2, RDS, S3, ELB, a
 - ✅ CloudWatch monitoring
 - ✅ Infrastructure as Code
 - ✅ One-command deployment
+
+## 🔗 Connect With Me
+
+[![GitHub](https://img.shields.io/badge/GitHub-George--Nyamao-181717?style=for-the-badge&logo=github)](https://github.com/George-Nyamao)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-George_Nyamao-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/george-nyamao-842137218/)
+[![Email](https://img.shields.io/badge/Email-gmnyamao@hotmail.com-D14836?style=for-the-badge&logo=gmail)](mailto:gmnyamao@hotmail.com)
 
 ## Project Structure
 
